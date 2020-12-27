@@ -31,7 +31,7 @@ export default new Vuex.Store({
       commit('setUserProfile', userProfile.data())
       
       // change route to dashboard
-      router.push('/')
+      router.push('/dashboard')
     },
 
     async logout({ commit }) {
@@ -39,7 +39,7 @@ export default new Vuex.Store({
     
       // clear userProfile and redirect to /login
       commit('setUserProfile', {})
-      router.push('/login')
+      router.push('/')
     }
   },
   modules: {
