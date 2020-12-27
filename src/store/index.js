@@ -7,7 +7,17 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    userProfile: {}
+    userProfile: {},
+    routes: [
+        {
+          name: 'Dunning Den',
+          distance: '5km',
+          type: 'Trail',
+          startCoord1: -3.585312000,
+          startCoord2:  56.311843000,
+        },
+    ]
+
   },
   mutations: {
     setUserProfile(state, val) {
