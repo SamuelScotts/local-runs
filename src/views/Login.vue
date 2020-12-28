@@ -3,7 +3,8 @@
     <v-row no-gutters>
       <v-col cols="12" sm="4"></v-col>
       <v-col cols="12" sm="4">
-        <v-img class="mt-12" src="../assets/localroutes.png" @click="$router.push('/')" style="cursor: pointer"></v-img>
+        <h1 class="mt-12" align="center" style="cursor: pointer" @click="$router.push('/')">RUN SCOTLAND</h1>
+        <!-- <v-img class="mt-12" src="../assets/localroutes.png" @click="$router.push('/')" style="cursor: pointer"></v-img> -->
         <v-card class="pa-8 mt-4" flat>
           <v-form>
             <v-container>

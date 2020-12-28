@@ -33,7 +33,7 @@
   };
 
   export default {
-    name: 'MapContainer',
+    name: 'Map',
     components: {},
     props: {},
     mounted() {
@@ -65,8 +65,8 @@
 
         // the map view will initially show the whole world
         view: new View({
-          zoom: 13,
-          center: [-412587.969426, 7616993.685547],
+          zoom: 6.5,
+          center: [-452507.207448, 7709734.866327],
           constrainResolution: true
         }),
       })
