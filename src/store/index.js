@@ -16,8 +16,21 @@ export default new Vuex.Store({
           startCoord1: -3.585312000,
           startCoord2:  56.311843000,
         },
-    ]
-
+    ],
+    locations: [
+      {
+        name: 'Auchterarder',
+        coorindates: [-412587.969426, 7616993.685547]
+      },
+      {
+        name: 'Dunning',
+        coorindates: [-399345.254276, 7620746.340550]
+      },
+      {
+        name: 'Blackford',
+        coorindates: [-421034.261052, 7610325.151994]
+      },
+    ],
   },
   mutations: {
     setUserProfile(state, val) {
