@@ -20,15 +20,15 @@ export default new Vuex.Store({
     locations: [
       {
         name: 'Auchterarder',
-        coorindates: [-412587.969426, 7616993.685547]
+        coorindates: []
       },
       {
         name: 'Dunning',
-        coorindates: [-399345.254276, 7620746.340550]
+        coorindates: []
       },
       {
         name: 'Blackford',
-        coorindates: [-421034.261052, 7610325.151994]
+        coorindates: []
       },
     ],
   },

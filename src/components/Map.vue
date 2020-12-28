@@ -1,65 +1,75 @@
 <template>
-  <div id="map"></div>
+  <div>
+    <div id="map"
+        style="width: 100%; height: 90vh;">
+    </div>
+    <div id="popup">
+    </div>
+  </div>
 </template>
 
 <script>
-/* eslint-disable */
-// import openlayer css for style
-import "ol/ol.css";
-// This is library of openlayer for handle map
-import Map from "ol/Map";
-import View from "ol/View";
-import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer';
-import {OSM, Vector as VectorSource} from 'ol/source';
+  import View from 'ol/View'
+  import Map from 'ol/Map'
+  import TileLayer from 'ol/layer/Tile'
+  import OSM from 'ol/source/OSM'
+  import VectorLayer from 'ol/layer/Vector'
+  import VectorSource from 'ol/source/Vector'
+  import GeoJSON from 'ol/format/GeoJSON'
 
-export default {
-  async mounted() {
-    await this.initiateMap();
-  },
-  
-  methods: {
-    initiateMap() {
-      // create vector layer
-      let source = new VectorSource();
-      let vector = new VectorLayer({
-        source: source
+  // importing the OpenLayers stylesheet is required for having
+  // good looking buttons!
+  import 'ol/ol.css'
+
+  const data = {
+    type: 'Feature',
+    properties: {
+      name: 'Auchterarder',
+    },
+    geometry: {
+      type: 'Point',
+      coordinates: [-3.698496, 56.292576]
+    }
+  };
+
+  export default {
+    name: 'MapContainer',
+    components: {},
+    props: {},
+    mounted() {
+
+      // a feature (geospatial object) is created from the GeoJSON
+      const feature = new GeoJSON().readFeature(data, {
+        // this is required since GeoJSON uses latitude/longitude,
+        // but the map is rendered using “Web Mercator”
+        featureProjection: 'EPSG:3857'
       });
-      // Create our initial map view
-      let view = new View({
-        projection: "EPSG:3857",
-        center: [-412587.969426, 7616993.685547], 
-        zoom: 13,
-      });
-      var tile = new TileLayer({
-        source: new OSM(),
-      });
-      // Now create our map
+
+      // a new vector layer is created with the feature
+      const vectorLayer = new VectorLayer({
+        source: new VectorSource({
+          features: [feature],
+        }),
+      })
+      // this is where we create the OpenLayers map
       new Map({
+        // the map will be created using the 'map-root' ref
         target: 'map',
-        view: view,
-        layers: [tile, vector],
-        loadTilesWhileAnimating: true,
-      });
-    },
-  },
+        layers: [
+          // adding a background tiled layer
+          new TileLayer({
+            source: new OSM() // tiles are served by OpenStreetMap
+          }),
+          vectorLayer
+        ],
 
-  computed:{
-        routes(){
-          return this.$store.state.routes
-        },
-        locations(){
-          return this.$store.state.locations
-        }
+        // the map view will initially show the whole world
+        view: new View({
+          zoom: 13,
+          center: [-412587.969426, 7616993.685547],
+          constrainResolution: true
+        }),
+      })
     },
-};
+  }
 </script>
-
-<style>
-#map {
-  position: absolute;
-  margin: 0;
-  padding: 0;
-  height: 640px;
-  width: 100%;
-}
-</style>
