@@ -1,14 +1,13 @@
 <template>
   <div>
     <div id="map" class ="mapx" style="width: 100%; height: 90vh;"></div>
-    <div id="popup">
+    <div ref="popup">
       <v-card>
         <v-card-text>
-          RUN TITLE
+          {{ routeName }}
         </v-card-text>
         <v-card-actions>
-        <v-btn x-small>GPX</v-btn>
-        <v-btn x-small>Close</v-btn>
+        <v-btn x-small>DOWNLOAD GPX</v-btn>
         </v-card-actions>
       </v-card>
     </div>
@@ -26,9 +25,6 @@
   import Point from 'ol/geom/Point'
   import Overlay from 'ol/Overlay'
   import {fromLonLat} from 'ol/proj';
-
-  // importing the OpenLayers stylesheet is required for having
-  // good looking buttons!
   import 'ol/ol.css'
 
   export default {
@@ -36,35 +32,49 @@
 
     data () {
       return {
-        //
+        routeData:[
+          {
+            name: 'Auchterarer Chilli Trail',
+            latlng_lng: -3.698496, 
+            latlng_lat: 56.292576,
+          },
+          {
+            name: 'Dunning Den Trail',
+            latlng_lng: -3.578053, 
+            latlng_lat: 56.306923,
+          },
+        ],
+        routeName: '',
       }
     },
 
     methods: {
       initMap(){
-
-        let data = new Feature({
-          type: 'click',
-          name: 'Auchterarder',
-          geometry: new Point(fromLonLat([-3.698496, 56.292576]))
-        })
-        let datas = []
-        datas.push(data);
-
+        let routes = []
+        for (let i=0; i<this.routeData.length; i++){
+          let route = new Feature({
+            type: 'click',
+            name: this.routeData[i].name,
+            geometry: new Point(fromLonLat([this.routeData[i].latlng_lng, this.routeData[i].latlng_lat]))
+          })
+          routes.push(route);
+        }
+        
         let vectorSource = new VectorSource({
-          features: datas
+          features: routes
         });
   
         let vectorLayer = new VectorLayer({
           source: vectorSource,
         });
 
-        const view = new View({
+        let view = new View({
             zoom: 6.5,
             center: [-452507.207448, 7709734.866327],
             constrainResolution: true
           })
 
+        // MAIN SECTION - DISPLAY MAP
         let map = new Map({
           target: 'map',
           view: view,
@@ -77,24 +87,39 @@
           loadTilesWhileAnimating: true,
         })
 
+        // ADD POPUP OVERLAY
         let popup = new Overlay({
+          element: this.$refs.popup
         });
-        map.addOverlay(popup)
+        map.addOverlay(popup);
 
-        map.on('singleclick', function(evt){
-          let feature = map.forEachFeatureAtPixel(evt.pixel, function(feature){
+        // CREATE POPUP ON SINGLE CLICK AT SPECIFIC POINT - REMOVE POPUP ALSO.
+        map.on('singleclick', (evt) => {
+          popup.setPosition(undefined);
+          let feature = evt.map.forEachFeatureAtPixel(evt.pixel, function(feature) {
             return feature;
-          })
-          
-          if(feature){
-            let coord = feature.getGeometry().getCoordinates();
-            popup.setPosition(coord)
+          });
+          if (feature) {
+            let geometry = feature.getGeometry();
+            let coord = geometry.getCoordinates();
+            let props = feature.getProperties();
+            popup.setPosition(coord);
+            this.routeName = props.name;
+            }
+        });
+
+        // ADJUST CURSER BASED ON HOVERING OVER ROUTE
+        map.on("pointermove", function (evt) {
+          let hit = evt.map.forEachFeatureAtPixel(evt.pixel, function() {
+              return true;
+          }); 
+          if (hit) {
+              this.getTargetElement().style.cursor = 'pointer';
+          } else {
+              this.getTargetElement().style.cursor = '';
           }
-
-        })
-
+        });
       },
-    
     },
 
     mounted() {
