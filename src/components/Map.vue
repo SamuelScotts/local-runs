@@ -3,8 +3,11 @@
     <div id="map" class ="mapx" style="width: 100%; height: 90vh;"></div>
     <div ref="popup">
       <v-card>
-        <v-card-text>
+        <v-card-title>
           {{ routeName }}
+        </v-card-title>
+        <v-card-text>
+          Route Distance: {{ routeDistance }}
         </v-card-text>
         <v-card-actions>
         <v-btn x-small>DOWNLOAD GPX</v-btn>
@@ -32,19 +35,12 @@
 
     data () {
       return {
-        routeData:[
-          {
-            name: 'Auchterarer Chilli Trail',
-            latlng_lng: -3.698496, 
-            latlng_lat: 56.292576,
-          },
-          {
-            name: 'Dunning Den Trail',
-            latlng_lng: -3.578053, 
-            latlng_lat: 56.306923,
-          },
-        ],
         routeName: '',
+        routeDistance: '',
+        lon: -452507.207448,
+        lat: 7709734.866327,
+        zoom: 6.5,
+        map: null,
       }
     },
 
@@ -55,6 +51,7 @@
           let route = new Feature({
             type: 'click',
             name: this.routeData[i].name,
+            distance: this.routeData[i].distance,
             geometry: new Point(fromLonLat([this.routeData[i].latlng_lng, this.routeData[i].latlng_lat]))
           })
           routes.push(route);
@@ -69,13 +66,13 @@
         });
 
         let view = new View({
-            zoom: 6.5,
-            center: [-452507.207448, 7709734.866327],
+            zoom: this.zoom,
+            center: [this.lon, this.lat],
             constrainResolution: true
           })
 
         // MAIN SECTION - DISPLAY MAP
-        let map = new Map({
+        this.map = new Map({
           target: 'map',
           view: view,
           layers: [
@@ -91,10 +88,10 @@
         let popup = new Overlay({
           element: this.$refs.popup
         });
-        map.addOverlay(popup);
+        this.map.addOverlay(popup);
 
         // CREATE POPUP ON SINGLE CLICK AT SPECIFIC POINT - REMOVE POPUP ALSO.
-        map.on('singleclick', (evt) => {
+        this.map.on('singleclick', (evt) => {
           popup.setPosition(undefined);
           let feature = evt.map.forEachFeatureAtPixel(evt.pixel, function(feature) {
             return feature;
@@ -105,11 +102,12 @@
             let props = feature.getProperties();
             popup.setPosition(coord);
             this.routeName = props.name;
+            this.routeDistance = props.distance
             }
         });
 
         // ADJUST CURSER BASED ON HOVERING OVER ROUTE
-        map.on("pointermove", function (evt) {
+        this.map.on("pointermove", function (evt) {
           let hit = evt.map.forEachFeatureAtPixel(evt.pixel, function() {
               return true;
           }); 
@@ -120,6 +118,36 @@
           }
         });
       },
+
+      newView(){
+        for (let i=0; i<this.locations.length; i++){
+          if (this.chosenPlace == this.locations[i].name){
+            this.lon = this.locations[i].lon
+            this.lat = this.locations[i].lat
+            this.zoom = this.locations[i].zoom
+          }
+        }
+        //this.initMap()
+      },
+    },
+
+    computed: {
+      routeData(){
+        return this.$store.state.routeData
+      },
+      locations(){
+        return this.$store.state.locations
+      },
+      chosenPlace(){
+        return this.$store.state.chosenPlace
+      },
+    }, 
+
+    watch: {
+      '$store.state.chosenPlace': function() {
+        this.newView()
+        //console.log(this.$store.state.chosenPlace)
+      }
     },
 
     mounted() {
