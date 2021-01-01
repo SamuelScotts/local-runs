@@ -10,33 +10,49 @@ export default new Vuex.Store({
     userProfile: {},
     routeData:[
       {
-        name: 'Auchterarer Chilli Trail',
-        distance: '10km',
-        latlng_lng: -3.698496, 
-        latlng_lat: 56.292576,
+        name: 'Auchterarder Chilli Trail',
+        distance: '6.2 miles',
+        latlng_lng: -3.706158, 
+        latlng_lat: 56.297474,
       },
       {
         name: 'Dunning Den Trail',
-        distance: '5k',
-        latlng_lng: -3.578053, 
-        latlng_lat: 56.306923,
+        distance: '3.1 miles',
+        latlng_lng: -3.586096, 
+        latlng_lat: 56.312008,
+      },
+      {
+        name: 'Kinpauch Trail',
+        distance: '5 miles',
+        latlng_lng: -3.783592,
+        latlng_lat: 56.257007,
       },
     ],
     chosenPlace: '',
     locations: [
       {
+        name: 'Scotland',
+        lon: -452507.207448,
+        lat: 7709734.866327,
+        zoom: 6.5,
+      },
+      {
         name: 'Auchterarder',
         lon: -412479.509463,
         lat: 7617714.238901,
-        zoom: 12,
+        zoom: 14.5,
       },
       {
         name: 'Dunning',
-        coorindates: []
+        lon: -399197.232179,
+        lat: 7620781.274661,
+        zoom: 15,
       },
       {
         name: 'Blackford',
-        coorindates: []
+        lon: -420929.160138,
+        lat: 7610458.898132,
+        zoom: 15,
       },
     ],
   },

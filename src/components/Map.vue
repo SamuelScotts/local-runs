@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div id="map" class ="mapx" style="width: 100%; height: 90vh;"></div>
+    <div id="map" style="width: 100%; height: 90.8vh;"></div>
     <div ref="popup">
       <v-card>
         <v-card-title>
@@ -28,7 +28,13 @@
   import Point from 'ol/geom/Point'
   import Overlay from 'ol/Overlay'
   import {fromLonLat} from 'ol/proj';
+  import GPX from 'ol/format/GPX';
+  import {Stroke, Style} from 'ol/style.js';
   import 'ol/ol.css'
+
+  import dunning from '../gpx/dunning_den_trail.gpx';
+  import auchterarder from '../gpx/auchterarder_chilli_trail.gpx'
+  import blackford from '../gpx/blackford_kinpauch_hill.gpx'
 
   export default {
     name: 'Map',
@@ -57,12 +63,43 @@
           routes.push(route);
         }
         
-        let vectorSource = new VectorSource({
-          features: routes
+        let routeMarkers= new VectorLayer({
+          source: new VectorSource({
+            features: routes
+          }),
         });
-  
-        let vectorLayer = new VectorLayer({
-          source: vectorSource,
+
+        var style = {
+          'LineString': new Style({
+            stroke: new Stroke({
+              color: '#f00',
+              width: 3,
+            }),
+          }),
+        };
+
+        let dunningMapping = new VectorLayer({
+          source: new VectorSource({
+            url: dunning,
+            format: new GPX(),
+          }),
+          style: style['LineString'],
+        });
+
+        let auchterarderMapping = new VectorLayer({
+          source: new VectorSource({
+            url: auchterarder,
+            format: new GPX(),
+          }),
+          style: style['LineString'],
+        });
+
+        let blackfordMapping = new VectorLayer({
+          source: new VectorSource({
+            url: blackford,
+            format: new GPX(),
+          }),
+          style: style['LineString'],
         });
 
         let view = new View({
@@ -79,7 +116,10 @@
             new Tile({
               source: new OSM()
             }),
-            vectorLayer
+            routeMarkers,
+            dunningMapping,
+            auchterarderMapping,
+            blackfordMapping,
           ],
           loadTilesWhileAnimating: true,
         })
@@ -127,7 +167,8 @@
             this.zoom = this.locations[i].zoom
           }
         }
-        //this.initMap()
+        this.map.dispose()
+        this.initMap()
       },
     },
 
@@ -146,7 +187,6 @@
     watch: {
       '$store.state.chosenPlace': function() {
         this.newView()
-        //console.log(this.$store.state.chosenPlace)
       }
     },
 
