@@ -10,22 +10,34 @@ export default new Vuex.Store({
     userProfile: {},
     routeData:[
       {
-        name: 'Auchterarder Chilli Trail',
-        distance: '6.2 miles',
+        name: 'Chilli Trail',
+        location: 'Auchterarder',
+        distance: '6.2',
         latlng_lng: -3.706158, 
         latlng_lat: 56.297474,
+        difficulty: "5/10",
+        terrain: "Trail",
+        likes: 0,
       },
       {
-        name: 'Dunning Den Trail',
-        distance: '3.1 miles',
+        name: 'Den Trail',
+        location: 'Dunning',
+        distance: '3.1',
         latlng_lng: -3.586096, 
         latlng_lat: 56.312008,
+        difficulty: "4/10",
+        terrain: "Trail",
+        likes: 0,
       },
       {
-        name: 'Kinpauch Trail',
-        distance: '5 miles',
+        name: 'Kinpauch',
+        location: 'Blackford',
+        distance: '5',
         latlng_lng: -3.783592,
         latlng_lat: 56.257007,
+        difficulty: "6/10",
+        terrain: 'Hill/Trail',
+        likes: 0,
       },
     ],
     chosenPlace: '',
@@ -46,13 +58,13 @@ export default new Vuex.Store({
         name: 'Dunning',
         lon: -399197.232179,
         lat: 7620781.274661,
-        zoom: 15,
+        zoom: 14,
       },
       {
         name: 'Blackford',
         lon: -420929.160138,
         lat: 7610458.898132,
-        zoom: 15,
+        zoom: 14,
       },
     ],
   },
@@ -62,7 +74,10 @@ export default new Vuex.Store({
     },
     selectedPlace(state, val){
       state.chosenPlace = val
-    }
+    },
+    addRoute(state, val){
+      state.routeData.push(val)
+    },
   },
   getters:{
     //

@@ -16,21 +16,24 @@
             <v-form>
                 <v-container>
                 <v-row>
-                    <v-col cols="12" md="12">
-                        <v-text-field prepend-icon="mdi-run" label="Run name" required></v-text-field>
+                    <v-col cols="12" md="6">
+                      <v-text-field prepend-icon="mdi-run" v-model="newRoute.name" label="Run name" color="#000" required></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                      <v-select prepend-icon="mdi-map-marker" width="1" class="mt-3" :items="this.locations" v-model="newRoute.location" flat outlined dense label="Location" color="#000" solo></v-select>
                     </v-col>
                 </v-row>
                 <v-row>
                     <v-col cols="12" md="6">
-                    <v-text-field prepend-icon="mdi-compass" label="Latitude" required></v-text-field>
+                    <v-text-field prepend-icon="mdi-compass" v-model.number="newRoute.latlng_lat" label="Latitude" color="#000" required></v-text-field>
                     </v-col>
                     <v-col cols="12" md="6">
-                    <v-text-field prepend-icon="mdi-compass" label="Longitude" required ></v-text-field>
+                    <v-text-field prepend-icon="mdi-compass" v-model.number="newRoute.latlng_lng" label="Longitude" color="#000" required ></v-text-field>
                     </v-col>
                 </v-row>
                 <v-row>
                     <v-col cols="12" md="6">
-                    <v-text-field prepend-icon="mdi-map-marker-distance" label="Distance in miles" required></v-text-field>
+                    <v-text-field prepend-icon="mdi-map-marker-distance" v-model="newRoute.distance" label="Distance in miles" color="#000" required></v-text-field>
                     </v-col>
                     <v-col cols="12" md="6">
                       <v-file-input accept=".gpx" label="Upload GPX file" ></v-file-input>
@@ -38,10 +41,10 @@
                 </v-row>
                 <v-row>
                     <v-col cols="12" md="6">
-                    <v-select width="1" class="mt-3" flat outlined dense label="Run Type" solo></v-select>
+                    <v-select width="1" class="mt-3" :items="this.types" chips label="Run Type" color="#000"  flat dense outlined multiple solo></v-select>
                     </v-col>
                     <v-col cols="12" md="6">
-                    <v-select width="1" class="mt-3" flat outlined dense label="Difficulty" solo></v-select>
+                    <v-select width="1" class="mt-3" :items="this.scale" v-model="newRoute.difficulty" flat outlined dense label="Difficulty" color="#000" solo></v-select>
                     </v-col>
                 </v-row>
                 </v-container>
@@ -58,7 +61,7 @@
             Cancel
           </v-btn>
           <v-spacer></v-spacer>
-          <v-btn text @click="dialog = false">
+          <v-btn text @click="dialog = false, addRoute()">
             Submit
           </v-btn>
         </v-card-actions>
@@ -73,7 +76,26 @@
     data () {
       return {
         dialog: false,
+        types: ['Road', 'Hill', 'Trail'],
+        scale: ['1/10', '2/10', '3/10', '4/10', '5/10', '6/10', '7/10', '8/10', '9/10', '10/10'],
+        locations:['Auchterarder', 'Dunning', 'Blackford'],
+        newRoute:{
+        name: '',
+        location: '',
+        distance: '',
+        latlng_lng: null, 
+        latlng_lat: null,
+        difficulty: '',
+        terrain: 'Road',
+        likes: 0
+        },
       }
     },
+
+    methods:{
+      addRoute(){
+        this.$store.commit('addRoute', this.newRoute)
+      },
+    }
   }
 </script>
