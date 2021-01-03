@@ -15,7 +15,7 @@
         </v-card-text>
         <v-card-actions>
           <v-btn class="mt-n2" x-small>Download GPX</v-btn>
-          <v-btn class="mt-n2" x-small>Plot on map</v-btn>
+          <v-btn class="mt-n2" x-small @click="plotRoute()">Plot on map</v-btn>
           <v-spacer></v-spacer>
           <v-icon class="mr-2 mb-2" color="#e31b23">mdi-heart</v-icon>{{routeLikes}}
         </v-card-actions>
@@ -231,7 +231,12 @@
       newRoute(){
         this.map.dispose();
         this.initMap()
+      },
+
+      getRouteData(){
+        this.$store.dispatch('fetchRouteData');
       }
+      
     },
 
     computed: {
@@ -257,6 +262,7 @@
 
     mounted() {
       this.initMap()
+      this.getRouteData()
     },
   }
 </script>

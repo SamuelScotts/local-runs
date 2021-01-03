@@ -9,7 +9,7 @@ export default new Vuex.Store({
   state: {
     userProfile: {},
     routeData:[
-      {
+/*       {
         name: 'Chilli Trail',
         location: 'Auchterarder',
         distance: '6.2',
@@ -38,7 +38,7 @@ export default new Vuex.Store({
         difficulty: "6/10",
         terrain: 'Hill/Trail',
         likes: 0,
-      },
+      }, */
     ],
     chosenPlace: '',
     locations: [
@@ -75,7 +75,7 @@ export default new Vuex.Store({
     selectedPlace(state, val){
       state.chosenPlace = val
     },
-    addRoute(state, val){
+    setRouteData(state, val){
       state.routeData.push(val)
     },
   },
@@ -83,6 +83,17 @@ export default new Vuex.Store({
     //
   },
   actions: {
+
+    async fetchRouteData({ commit }){
+      //fetch route data from Cloud Firestore
+      await fb.routeData.get().then(function(querySnapshot) {
+        querySnapshot.forEach(function(doc) {
+            // set route data in state
+            commit('setRouteData', doc.data())
+        });
+      });
+    },
+
     async login({ dispatch }, form) {
       // sign user in
       const { user } = await fb.auth.signInWithEmailAndPassword(form.email, form.password)
@@ -99,7 +110,7 @@ export default new Vuex.Store({
       commit('setUserProfile', userProfile.data())
       
       // change route to dashboard
-      router.push('/dashboard')
+      router.push('/')
     },
 
     async logout({ commit }) {
@@ -111,5 +122,6 @@ export default new Vuex.Store({
     }
   },
   modules: {
+    //
   }
 })

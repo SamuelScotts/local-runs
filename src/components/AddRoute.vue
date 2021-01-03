@@ -41,7 +41,7 @@
                 </v-row>
                 <v-row>
                     <v-col cols="12" md="6">
-                    <v-select width="1" class="mt-3" :items="this.types" chips label="Run Type" color="#000"  flat dense outlined multiple solo></v-select>
+                    <v-select width="1" class="mt-3" :items="this.types" chips label="Run Type" color="#000" v-model="newRoute.terrain" flat dense outlined multiple solo></v-select>
                     </v-col>
                     <v-col cols="12" md="6">
                     <v-select width="1" class="mt-3" :items="this.scale" v-model="newRoute.difficulty" flat outlined dense label="Difficulty" color="#000" solo></v-select>
@@ -57,7 +57,7 @@
         <v-divider></v-divider>
 
         <v-card-actions>
-            <v-btn text @click="dialog = false">
+            <v-btn text @click="dialog = false, clearForm()">
             Cancel
           </v-btn>
           <v-spacer></v-spacer>
@@ -71,6 +71,9 @@
 </template>
 
 <script>
+
+  import * as fb from '../firebase'
+
   export default {
     name: "AddRoute",
     data () {
@@ -86,15 +89,27 @@
         latlng_lng: null, 
         latlng_lat: null,
         difficulty: '',
-        terrain: 'Road',
+        terrain: '',
         likes: 0
         },
       }
     },
 
     methods:{
-      addRoute(){
-        this.$store.commit('addRoute', this.newRoute)
+      async addRoute(){
+        await fb.routeData.add(this.newRoute);
+        //this.$store.dispatch('fetchRouteData');
+        this.$store.commit('setRouteData', this.newRoute)
+      },
+
+      clearForm(){
+        this.newRoute.name = '',
+        this.newRoute.location = '',
+        this.newRoute.distance = '',
+        this.newRoute.latlng_lng = null,
+        this.newRoute.latlng_lat = null,
+        this.newRoute.difficulty = '',
+        this.newRoute.terrain = ''
       },
     }
   }
