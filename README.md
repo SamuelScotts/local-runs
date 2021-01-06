@@ -1,24 +1,12 @@
 # localruns
 
-## Project setup
-```
-npm install
-```
+Stack - 
+Front-end: Vue.js, Vuex, Vue-Router, Vuetify, Open-Layers
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+Back-end: Firestore DB/Auth
 
-### Compiles and minifies for production
-```
-npm run build
-```
+Language: JavaScript.
 
-### Lints and fixes files
-```
-npm run lint
-```
+A running route finder.  Currently provides the ability to view routes on a map (code to plot them is within the files, but not the most streamlined so commented out), and find out details about each.  Also will allow the downloading of the route's GPX data.  You are also to add your own routes, and will eventually be able to upload the GPX data too.
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+There are plans to implement route drawing, so you can plot/plan a route.
