@@ -94,6 +94,15 @@ export default new Vuex.Store({
       });
     },
 
+    async register({ dispatch }, form) {
+      // register new user, and sign them in
+      await fb.auth.createUserWithEmailAndPassword(form.email, form.password)
+      const { user } = await fb.auth.signInWithEmailAndPassword(form.email, form.password)
+  
+      // fetch user profile and set in state
+      dispatch('fetchUserProfile', user)
+    },
+
     async login({ dispatch }, form) {
       // sign user in
       const { user } = await fb.auth.signInWithEmailAndPassword(form.email, form.password)
@@ -110,7 +119,7 @@ export default new Vuex.Store({
       commit('setUserProfile', userProfile.data())
       
       // change route to dashboard
-      router.push('/')
+      router.push('/').catch(()=>{})
     },
 
     async logout({ commit }) {
@@ -118,7 +127,7 @@ export default new Vuex.Store({
     
       // clear userProfile and redirect to /login
       commit('setUserProfile', {})
-      router.push('/')
+      router.push('/').catch(()=>{})
     }
   },
   modules: {
