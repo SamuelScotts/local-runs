@@ -20,6 +20,7 @@ const db = firebase.default.firestore()
 // collection references
 const usersCollection = db.collection('users')
 const routeData = db.collection('routeData')
+const usersData = db.collection('usersData')
 
 
 // export utils/refs
@@ -28,4 +29,5 @@ export {
   auth,
   usersCollection,
   routeData,
+  usersData,
 }

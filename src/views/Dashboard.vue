@@ -1,6 +1,7 @@
 <template>
   <div>
     <h1>Dashboard</h1>
+    <h1>Hello {{userProfile.name}}</h1>
     <v-btn @click="$router.push('/')">Routes</v-btn>
     <v-btn class="ml-4" @click="logout()">Logout</v-btn>
   </div>
@@ -16,7 +17,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['userProfile'])
+    ...mapState(['userProfile']),
   },
   methods:{
     logout(){

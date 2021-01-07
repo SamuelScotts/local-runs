@@ -72,6 +72,9 @@ export default new Vuex.Store({
     setUserProfile(state, val) {
       state.userProfile = val
     },
+    setUserInfo(state, val) {
+      state.userProfile = val
+    },
     selectedPlace(state, val){
       state.chosenPlace = val
     },
@@ -114,9 +117,11 @@ export default new Vuex.Store({
     async fetchUserProfile({ commit }, user) {
       // fetch user profile
       const userProfile = await fb.usersCollection.doc(user.uid).get()
+      const userInfo = await fb.usersData.doc(user.uid).get()
   
       // set user profile in state
       commit('setUserProfile', userProfile.data())
+      commit('setUserInfo', userInfo.data())
       
       // change route to dashboard
       router.push('/').catch(()=>{})
