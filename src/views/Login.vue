@@ -24,7 +24,7 @@
                   <v-text-field color="black" prepend-icon="mdi-account" v-model="loginForm.name" label="Name" required></v-text-field>
                   <v-text-field color="black" prepend-icon="mdi-account" v-model="loginForm.email" label="Email" required></v-text-field>
                   <v-text-field color="black" v-model="loginForm.password" :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'" :type="show1 ? 'text' : 'password'" label="Password" prepend-icon="mdi-lock" @click:append="show1 = !show1"></v-text-field>
-                  <v-btn block class="mt-4" dark @click="register(),addUserName()">Sign-up</v-btn>
+                  <v-btn block class="mt-4" dark @click="register()">Sign-up</v-btn>
                   <v-btn block class="mt-4" dark small @click="signup=false">I've already got an account...</v-btn>
                 </v-col>
               </v-row>
@@ -59,7 +59,7 @@
 
 <script>
 
-import * as fb from '../firebase'
+//import * as fb from '../firebase'
 
 export default {
   data() {
@@ -83,22 +83,11 @@ export default {
     },
     register(){
       this.$store.dispatch('register', {
+        name: this.loginForm.name,
         email: this.loginForm.email,
         password: this.loginForm.password
       })
       this.signup = false
-    },
-
-    // WORKING HERE CURRENTLY!!  DOES NOT YET WORK...
-    // WORKING HERE CURRENTLY!!  DOES NOT YET WORK...
-    // WORKING HERE CURRENTLY!!  DOES NOT YET WORK...
-    // WORKING HERE CURRENTLY!!  DOES NOT YET WORK...
-    async addUserName(){
-      await fb.auth.onAuthStateChanged(function(user) {
-        if (user) {
-          fb.userData.doc(user).set({name: this.loginForm.name});
-        }
-      });      
     },
   },
 }

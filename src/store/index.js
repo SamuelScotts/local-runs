@@ -101,7 +101,7 @@ export default new Vuex.Store({
       // register new user, and sign them in
       await fb.auth.createUserWithEmailAndPassword(form.email, form.password)
       const { user } = await fb.auth.signInWithEmailAndPassword(form.email, form.password)
-  
+
       // fetch user profile and set in state
       dispatch('fetchUserProfile', user)
     },
@@ -118,7 +118,7 @@ export default new Vuex.Store({
       // fetch user profile
       const userProfile = await fb.usersCollection.doc(user.uid).get()
       const userInfo = await fb.usersData.doc(user.uid).get()
-  
+
       // set user profile in state
       commit('setUserProfile', userProfile.data())
       commit('setUserInfo', userInfo.data())
@@ -132,7 +132,7 @@ export default new Vuex.Store({
     
       // clear userProfile and redirect to /login
       commit('setUserProfile', {})
-      router.push('/').catch(()=>{})
+      router.push('/login').catch(()=>{})
     }
   },
   modules: {
