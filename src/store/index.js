@@ -69,11 +69,21 @@ export default new Vuex.Store({
     ],
   },
   mutations: {
-    setUserProfile(state, val) {
+    clearUserProfile(state, val){
       state.userProfile = val
     },
-    setUserInfo(state, val) {
-      state.userProfile = val
+    setUserProfile(state, val) {
+      state.userProfile.id = val
+    },
+    setUserRoutes(state) {
+      let routes = []
+      for (let i=0; i<this.state.routeData.length; i++){
+        if (this.state.routeData[i].user == this.state.userProfile.id){
+          routes.push(this.state.routeData[i])
+          console.log(routes)
+        }
+      }
+      state.userProfile.routes = routes 
     },
     selectedPlace(state, val){
       state.chosenPlace = val
@@ -117,11 +127,10 @@ export default new Vuex.Store({
     async fetchUserProfile({ commit }, user) {
       // fetch user profile
       const userProfile = await fb.usersCollection.doc(user.uid).get()
-      const userInfo = await fb.usersData.doc(user.uid).get()
 
       // set user profile in state
-      commit('setUserProfile', userProfile.data())
-      commit('setUserInfo', userInfo.data())
+      commit('setUserProfile', userProfile.id)
+      commit('setUserRoutes')
       
       // change route to dashboard
       router.push('/').catch(()=>{})
@@ -131,7 +140,8 @@ export default new Vuex.Store({
       await fb.auth.signOut()
     
       // clear userProfile and redirect to /login
-      commit('setUserProfile', {})
+      commit('clearUserProfile', {})
+      console.log(this.state.userProfile)
       router.push('/login').catch(()=>{})
     }
   },

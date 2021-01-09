@@ -90,16 +90,20 @@
         latlng_lat: null,
         difficulty: '',
         terrain: '',
-        likes: 0
+        likes: 0,
+        user: null,
         },
       }
     },
 
     methods:{
       async addRoute(){
+        this.newRoute.user = this.userProfile.id
+        console.log(this.newRoute)
         await fb.routeData.add(this.newRoute);
         //this.$store.dispatch('fetchRouteData');
         this.$store.commit('setRouteData', this.newRoute)
+        //this.$store.commit('fetchUserProfile')
       },
 
       clearForm(){
@@ -111,6 +115,12 @@
         this.newRoute.difficulty = '',
         this.newRoute.terrain = ''
       },
-    }
+    },
+
+    computed: {
+      userProfile(){
+        return this.$store.state.userProfile
+      },
+    },
   }
 </script>
