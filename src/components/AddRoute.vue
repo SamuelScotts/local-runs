@@ -2,7 +2,7 @@
   <div class="text-center">
     <v-dialog v-model="dialog" width="500">
       <template v-slot:activator="{ on, attrs }">
-        <v-btn class="mr-4" large dark v-bind="attrs" v-on="on">
+        <v-btn class="mr-4" dark v-bind="attrs" v-on="on">
           ADD ROUTE
         </v-btn>
       </template>
@@ -25,10 +25,10 @@
                 </v-row>
                 <v-row>
                     <v-col cols="12" md="6">
-                    <v-text-field prepend-icon="mdi-compass" v-model.number="newRoute.latlng_lat" label="Latitude" color="#000" required></v-text-field>
+                    <v-text-field prepend-icon="mdi-compass" v-model.number="newRoute.latlng_lat" label="Start Longitude" color="#000" required></v-text-field>
                     </v-col>
                     <v-col cols="12" md="6">
-                    <v-text-field prepend-icon="mdi-compass" v-model.number="newRoute.latlng_lng" label="Longitude" color="#000" required ></v-text-field>
+                    <v-text-field prepend-icon="mdi-compass" v-model.number="newRoute.latlng_lng" label="Start Latitude" color="#000" required ></v-text-field>
                     </v-col>
                 </v-row>
                 <v-row>

@@ -8,38 +8,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     userProfile: {},
-    routeData:[
-/*       {
-        name: 'Chilli Trail',
-        location: 'Auchterarder',
-        distance: '6.2',
-        latlng_lng: -3.706158, 
-        latlng_lat: 56.297474,
-        difficulty: "5/10",
-        terrain: "Trail",
-        likes: 0,
-      },
-      {
-        name: 'Den Trail',
-        location: 'Dunning',
-        distance: '3.1',
-        latlng_lng: -3.586096, 
-        latlng_lat: 56.312008,
-        difficulty: "4/10",
-        terrain: "Trail",
-        likes: 0,
-      },
-      {
-        name: 'Kinpauch',
-        location: 'Blackford',
-        distance: '5',
-        latlng_lng: -3.783592,
-        latlng_lat: 56.257007,
-        difficulty: "6/10",
-        terrain: 'Hill/Trail',
-        likes: 0,
-      }, */
-    ],
+    routeData:[],
     chosenPlace: '',
     locations: [
       {
@@ -69,27 +38,33 @@ export default new Vuex.Store({
     ],
   },
   mutations: {
-    clearUserProfile(state, val){
-      state.userProfile = val
+    setUserProfile(state, userProfile) {
+      state.userProfile.id = userProfile.id
     },
-    setUserProfile(state, val) {
-      state.userProfile.id = val
-    },
-    setUserRoutes(state) {
-      let routes = []
-      for (let i=0; i<this.state.routeData.length; i++){
-        if (this.state.routeData[i].user == this.state.userProfile.id){
-          routes.push(this.state.routeData[i])
-          console.log(routes)
-        }
-      }
-      state.userProfile.routes = routes 
+    setUserName(state, userData) {
+      state.userProfile.name = userData
     },
     selectedPlace(state, val){
       state.chosenPlace = val
     },
     setRouteData(state, val){
       state.routeData.push(val)
+      console.log(state.routeData)
+
+      let routes = []
+      for (let i=0; i<this.state.routeData.length; i++){
+        if (this.state.routeData[i].user == this.state.userProfile.id){
+          routes.push(this.state.routeData[i])
+        }
+      }
+      state.userProfile.routes = routes 
+    },
+    // LOGOUT MUTATIONS
+    clearUserProfile(state, val){
+      state.userProfile = val
+    },
+    clearUserRoutes(state){
+      state.routeData = []
     },
   },
   getters:{
@@ -99,6 +74,7 @@ export default new Vuex.Store({
 
     async fetchRouteData({ commit }){
       //fetch route data from Cloud Firestore
+      commit('clearUserRoutes')
       await fb.routeData.get().then(function(querySnapshot) {
         querySnapshot.forEach(function(doc) {
             // set route data in state
@@ -110,7 +86,8 @@ export default new Vuex.Store({
     async register({ dispatch }, form) {
       // register new user, and sign them in
       await fb.auth.createUserWithEmailAndPassword(form.email, form.password)
-      const { user } = await fb.auth.signInWithEmailAndPassword(form.email, form.password)
+      const user = await fb.auth.signInWithEmailAndPassword(form.email, form.password)
+      //await fb.userData.doc(user).add(form.name);
 
       // fetch user profile and set in state
       dispatch('fetchUserProfile', user)
@@ -118,20 +95,21 @@ export default new Vuex.Store({
 
     async login({ dispatch }, form) {
       // sign user in
-      const { user } = await fb.auth.signInWithEmailAndPassword(form.email, form.password)
+      const user = await fb.auth.signInWithEmailAndPassword(form.email, form.password)
   
       // fetch user profile and set in state
       dispatch('fetchUserProfile', user)
     },
-
+    
     async fetchUserProfile({ commit }, user) {
       // fetch user profile
       const userProfile = await fb.usersCollection.doc(user.uid).get()
+      const userData = await fb.usersData.doc(userProfile.id).get()
 
       // set user profile in state
-      commit('setUserProfile', userProfile.id)
-      commit('setUserRoutes')
-      
+      commit('setUserProfile', userProfile)
+      commit('setUserName', userData.data().name)
+
       // change route to dashboard
       router.push('/').catch(()=>{})
     },
@@ -141,7 +119,7 @@ export default new Vuex.Store({
     
       // clear userProfile and redirect to /login
       commit('clearUserProfile', {})
-      console.log(this.state.userProfile)
+      commit('clearUserRoutes')
       router.push('/login').catch(()=>{})
     }
   },

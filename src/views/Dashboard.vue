@@ -1,18 +1,27 @@
 <template>
   <div>
-    <h1>Dashboard</h1>
-    <h1>Hello {{userProfile.id}}</h1>
-    <h2>Your routes:</h2>
-      <v-data-table :headers="headers" :items="this.userRoutes" :items-per-page="10" class="elevation-1"></v-data-table>
-    <v-btn @click="$router.push('/')">Routes</v-btn>
-    <v-btn class="ml-4" @click="logout()">Logout</v-btn>
+    <NavBar/>
+    <v-container class="grey lighten-5 mt-4">
+      <v-row>
+        <v-col cols="12" sm="12">
+          <v-card class="pa-2" outlined tile>
+            <h1 class="ml-3 mb-3">Hello {{userName}}.  Here are your routes:</h1>
+              <v-data-table :headers="headers" :items="this.userRoutes" :items-per-page="10" flat></v-data-table>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
+import NavBar from '../components/NavBar'
 
 export default {
+  components:{
+    NavBar
+  },
   data() {
     return {
       headers:[{
@@ -22,7 +31,27 @@ export default {
       {
         text: "Distance:",
         value: 'distance',
-      },]
+      },
+      {
+        text: "Location:",
+        value: 'location',
+      },
+      {
+        text: "Difficulty:",
+        value: 'difficulty',
+      },
+      {
+        text: "Terrain:",
+        value: 'terrain',
+      },
+      {
+        text: "Likes:",
+        value: 'likes',
+      },
+      {
+        text: "Delete:",
+      },
+      ],
     }
   },
   computed: {
@@ -33,14 +62,14 @@ export default {
     userRoutes(){
       return this.$store.state.userProfile.routes
     },
+    userName(){
+      return this.$store.state.userProfile.name
+    },
   },
   methods:{
     logout(){
       this.$store.dispatch('logout')
     },
   },
-  created(){
-    //
-  }
 }
 </script>
